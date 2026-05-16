@@ -26,20 +26,7 @@ class AuthAction extends LuxidAction
     {
         $data = $this->request()->input();
 
-        // Validate required fields
-        $required = ['email', 'password', 'firstname', 'lastname'];
-        foreach ($required as $field) {
-            if (empty($data[$field])) {
-                return Response::error("The {$field} field is required.", null, 422);
-            }
-        }
-
-        // Create new user
-        $user = new User();
-        $user->email = $data['email'];
-        $user->password = $data['password'];
-        $user->firstname = $data['firstname'];
-        $user->lastname = $data['lastname'];
+        $user = User::create($data);
 
         // Validate and save
         if (!$user->validate()) {
@@ -65,30 +52,12 @@ class AuthAction extends LuxidAction
      */
     public function login(): string
     {
-        $data = $this->request()->input();
-
-        // Validate required fields
-        if (empty($data['email'])) {
-            return Response::error('Email is required.', null, 422);
-        }
-
-        if (empty($data['password'])) {
-            return Response::error('Password is required.', null, 422);
-        }
-
-        // Attempt login using auth helper
-        $credentials = [
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ];
-
-        $remember = !empty($data['remember']);
+        $credentials = $this->request()->only(['email', 'password']);
+        $remember = $this->request()->input('remember', false);
 
         if (auth()->attempt($credentials, $remember)) {
-            $user = auth()->user();
-
             return Response::success([
-                'user' => $user,
+                'user' => auth()->user(),
                 'message' => 'Login successful!'
             ]);
         }
