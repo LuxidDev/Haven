@@ -19,8 +19,8 @@
   ],
   "require": {
     "php": "^8.0",
-    "luxid/engine": "^0.7.6",
-    "luxid/rocket": "^0.2.1"
+    "luxid/engine": "^0.7.7",
+    "luxid/rocket": "^0.2.2"
   },
   "autoload": {
     "psr-4": {
@@ -51,3 +51,4 @@
   "minimum-stability": "dev",
   "prefer-stable": true
 }
+
