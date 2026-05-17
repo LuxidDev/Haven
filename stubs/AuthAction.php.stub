@@ -6,6 +6,7 @@ use App\Actions\LuxidAction;
 use App\Entities\User;
 use Luxid\Nodes\Request;
 use Luxid\Nodes\Response;
+use Luxid\Routing\Routes;
 
 /**
  * Auth Action
@@ -18,6 +19,16 @@ use Luxid\Nodes\Response;
  */
 class AuthAction extends LuxidAction
 {
+    public static function routes(): Routes
+    {
+        return Routes::new()
+            ->prefix('api')
+            ->add('/auth/register', post('register'))
+            ->add('/auth/login', post('login'))
+            ->add('/auth/logout', post('logout'))
+            ->add('/auth/me', get('me'));
+    }
+
     /**
      * Register a new user
      * POST /auth/register
@@ -30,10 +41,11 @@ class AuthAction extends LuxidAction
             return Response::error('Validation failed', $result->errors, 422);
         }
 
-        auth()->login($result->entity);
+        $user = $result->getEntity();
+        auth()->login($user);
 
         return Response::success([
-            'user' => $result->entity,
+            'user' => $user,
             'message' => 'Registration successful!'
         ], 201);
     }

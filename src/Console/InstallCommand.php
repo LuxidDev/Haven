@@ -220,26 +220,9 @@ class InstallCommand extends Command
 
     $authRoutes = <<<'PHP'
 
-// Authentication Routes (Haven)
-route('auth.register')
-    ->post('/auth/register')
-    ->uses(\App\Actions\AuthAction::class, 'register')
-    ->open();
+use App\Actions\AuthAction;
 
-route('auth.login')
-    ->post('/auth/login')
-    ->uses(\App\Actions\AuthAction::class, 'login')
-    ->open();
-
-route('auth.logout')
-    ->post('/auth/logout')
-    ->uses(\App\Actions\AuthAction::class, 'logout')
-    ->auth();
-
-route('auth.me')
-    ->get('/auth/me')
-    ->uses(\App\Actions\AuthAction::class, 'me')
-    ->auth();
+AuthAction::routes()->register(AuthAction::class);
 
 PHP;
 
